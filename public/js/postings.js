@@ -19,7 +19,7 @@ var post = {
 
   _searchForPostings: function (e) {
     e.preventDefault();
-    var content = [this._searchInp.val()];
+    var content = this._searchInp.val();
     Request.Post("/api/search", {"keywords": content})
      .then(function (postings){
        this._generatePostingRows(postings);
@@ -84,4 +84,3 @@ $(document).ready(function() {
 function getDefaultResume() {
   return Request.Get("/js/resume.txt");
 }
-
