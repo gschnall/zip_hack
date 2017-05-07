@@ -41,7 +41,7 @@ function getSummaries(jobsArray)
           jobsProcessed++;
         } else {
           jobsProcessed++;
-          job.summary = $('#job_summary', body).text();
+          job.summary = $('#job_summary', body).text(); 
         }
         if (jobsProcessed === array.length){
           resolve(jobsArray);
