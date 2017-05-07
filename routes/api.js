@@ -17,7 +17,7 @@ router.get('/search', function(req, res){
   var jobSearchKeywords = req.query.keywords || ["nodejs"];
   var jobSearchResultsLength = req.query.length || 2;
   var jobSearchRadius = req.query.radius || 25;
-  var jobSort = req.query.sort || 'date';
+  var jobSort = req.query.sort || 'relevance';
   Indeed.findJobs(jobSearchCity, jobSearchState, jobSearchKeywords, jobSearchResultsLength, jobSearchRadius, jobSort)
         .then(Indeed.getSummaries)
         .then(Reviews.getEmployeeReview)
