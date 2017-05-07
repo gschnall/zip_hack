@@ -21,7 +21,8 @@ var post = {
 
   _searchForPostings: function (e) {
     e.preventDefault();
-
+    this._showLoader(true);
+    this._postContainer.empty();
     var content = this._searchInp.val();
 
     Request.Post("/api/search", {"keywords": content})
@@ -45,9 +46,16 @@ var post = {
   },
 
   _createPostingRow: function (post, n) {
-    console.log("post",post);
+    //console.log("post",post);
+    var bikeTime;
+    var carTime;
     var description = post.summary.substr(0, 144) + "...";
     var commuteSeverity = (post.commute > 25 ? "text-danger" : "text-success");
+
+    if (post.transit.startLatlon && post.transit.startLatlon.lat) {
+      bikeTime = post.transit.bicycling.duration.text;
+      carTime = post.transit.driving.duration.text;
+    } 
 
     var $row = $("<div>", {id: "posting-row-" + String(n), "class": "card"});
     var $cb = $("<div>", {"class": "card-block"});
@@ -56,8 +64,8 @@ var post = {
     var $company = $("<h4>", {"text": post.company, "class": "card-title"});
     var $location = $("<p>", {"text": post.formattedLocationFull, "class": "card-text"});
     var $description = $("<p>", {"text": description, "class": "card-text"});
-    var $commuteNumb = $("<span>", {"text": post.commute + " miles", "class": "card-text " + commuteSeverity});
-    var $commute = $("<p>", {"text": "Commute: ", "class": "card-text"}).append($commuteNumb);
+    var $biking = $("<p>", {"text": "Biking: " + bikeTime, "class": "card-text"});
+    var $driving = $("<p>", {"text": "Driving: " + carTime, "class": "card-text"});
     var $review = $("<p>", {
       "class": "card-text",
       "html": "<strong>Glassdoor Rating</strong>: " + String(post.review.overallRating) + " based off of " + String(post.review.numberOfRatings) + " ratings."
@@ -70,7 +78,10 @@ var post = {
       $cb.append($company)
       $cb.append($description)
       if (post.review.numberOfRatings && post.review.numberOfRatings > 0) { $cb.append($review); }
-      $cb.append($commute)
+      if (post.transit.startLatlon && post.transit.startLatlon.lat) {
+        $cb.append($biking)
+        $cb.append($driving)
+      }
       $cb.append($apply)
 
     this._postContainer.append($row);
