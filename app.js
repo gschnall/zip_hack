@@ -14,6 +14,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/public/index.html')
+});
+
+app.get('/user_demo', function(req, res){
+  res.sendFile(__dirname + '/public/user_demo.html');
+});
+
+app.get('/users', function(req,res){
+  res.sendFile(__dirname + '/public/users.html')
 })
 
 //use routes
