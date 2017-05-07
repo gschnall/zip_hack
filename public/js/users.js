@@ -20,7 +20,7 @@ var users = [
       {city: 'Irvine', state: 'CA'},
       {city: 'Santa Monica', state: 'CA'},
     ],
-    keywords: 'web developer',
+    keywords: 'IoT developer',
     sortPref: 'commute',
     relocate: false,
     resume: '/js/resume.txt'
@@ -38,6 +38,5 @@ var users = [
     sortPref: 'rpp',
     relocate: true,
     resume: '/js/resume.txt'
-
   }
 ];

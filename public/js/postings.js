@@ -40,11 +40,12 @@ var post = {
   },
 
   _showLoader: function (show) {
-    if (show) { return this._postLoader.removeClass("hide") } 
+    if (show) { return this._postLoader.removeClass("hide") }
     return this._postLoader.addClass("hide")
   },
 
   _createPostingRow: function (post, n) {
+    var mapBaseUrl = 'https://maps.googleapis.com/maps/api/staticmap?size=300x300&zoom=15&maptype=roadmap&key=AIzaSyBl9dkTrB28BcxG4ArsEdA_1yx7ZrquqIQ&center='
     var description = post.summary.substr(0, 144) + "...";
     var commuteSeverity = (post.commute > 25 ? "text-danger" : "text-success");
 
@@ -55,6 +56,10 @@ var post = {
     var $company = $("<h4>", {"text": post.company, "class": "card-title"});
     var $location = $("<p>", {"text": post.formattedLocationFull, "class": "card-text"});
     var $description = $("<p>", {"text": description, "class": "card-text"});
+    if (post.transit.endLatlon.lat)
+    {
+      var $staticmap = $("<img>", {"src": mapBaseUrl + post.transit.endLatlon.lat + ',' + post.transit.endLatlon.lng + '&markers=color:blue%7C' + post.transit.endLatlon.lat + ',' + post.transit.endLatlon.lng});
+    }
     var $commuteNumb = $("<span>", {"text": post.commute + " miles", "class": "card-text " + commuteSeverity});
     var $commute = $("<p>", {"text": "Commute: ", "class": "card-text"}).append($commuteNumb);
     var $review = $("<p>", {
@@ -71,12 +76,17 @@ var post = {
       if (post.review.numberOfRatings && post.review.numberOfRatings > 0) { $cb.append($review); }
       $cb.append($commute)
       $cb.append($apply)
+      if (post.transit.endLatlon)
+      {
+        $cb.append($staticmap)
+      }
+
 
     this._postContainer.append($row);
   },
 
   _getSampleSkills: function () {
-    return ["JavaScript", "Node.js", "HTML", "CSS"]; 
+    return ["JavaScript", "Node.js", "HTML", "CSS"];
   },
 
   _generateSkillsResult: function(postText, resumeText, ind) {
