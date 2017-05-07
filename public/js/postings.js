@@ -45,6 +45,7 @@ var post = {
   },
 
   _createPostingRow: function (post, n) {
+    console.log("post",post);
     var description = post.summary.substr(0, 144) + "...";
     var commuteSeverity = (post.commute > 25 ? "text-danger" : "text-success");
 
