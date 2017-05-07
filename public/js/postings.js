@@ -90,6 +90,14 @@ var post = {
     var $skill = $("<p>", {"text": String(skillNumber) + "%", "class": "skills-number card-text " + skillColor});
     $skill.click({"param1":post.skills.toString()}, this._skillAlert);
 
+    // -- less than 100 green, more make it red, Purchansing Power
+    if (post.rpp && post.rpp.dest) {
+      var thePrice = post.rpp.dest["RPPs: All items"]
+      var priceColor = thePrice > 100 ? "text-danger" : "text-success"; 
+      var $price = $("<p>", {"text": "Purchasing Power: " + String(thePrice), "class": "card-text " + priceColor});
+      $price.click({"param1": JSON.stringify(post.rpp)}, this._skillAlert);
+    }
+
     var $apply = $("<a>", {"text": "Apply", "class": "btn btn-primary apply-btn"});
     $apply.click({"param1": "thing"}, this._transformToCheck);
 
@@ -99,6 +107,9 @@ var post = {
       $cb.append($skill);
       $cb.append($company)
       $cb.append($description)
+      if (post.rpp && post.rpp.dest) {
+        $cb.append($price);
+      }
       if (post.review.numberOfRatings && post.review.numberOfRatings > 0) { $cb.append($review); }
       if (post.transit.startLatlon && post.transit.startLatlon.lat) {
         $cb.append($staticmap)
