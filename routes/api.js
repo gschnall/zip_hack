@@ -30,13 +30,13 @@ router.get('/search', function(req, res){
         });
   })
   .post('/search', function(req, res){
-  var jobSearchStartLocation = req.query.loc || '312 Arizona Ave, Santa Monica, CA 90401';
-  var jobSearchCity = req.query.city || 'Santa Monica';
-  var jobSearchState = req.query.state || "CA";
-  var jobSearchKeywords = req.query.keywords || ["nodejs"];
-  var jobSearchResultsLength = req.query.length || 2;
-  var jobSearchRadius = req.query.radius || 25;
-  var jobSort = req.query.sort || 'date';
+  var jobSearchStartLocation = req.body.loc || '312 Arizona Ave, Santa Monica, CA 90401';
+  var jobSearchCity = req.body.city || 'Santa Monica';
+  var jobSearchState = req.body.state || "CA";
+  var jobSearchKeywords = [req.body.keywords] || ["nodejs"];
+  var jobSearchResultsLength = req.body.length || 2;
+  var jobSearchRadius = req.body.radius || 25;
+  var jobSort = req.body.sort || 'date';
   Indeed.findJobs(jobSearchCity, jobSearchState, jobSearchKeywords, jobSearchResultsLength, jobSearchRadius, jobSort)
         .then(Indeed.getSummaries)
         .then(Skills.getSkills)
