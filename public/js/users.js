@@ -1,7 +1,7 @@
 var users = [
   {
     name: 'Hannah R.',
-    loc: 'Santa Monica, CA',
+    loc: 'Westwood, CA',
     searchAreas: [
       {city: 'Pasadena', state: 'CA' },
       {city: 'Palo Alto', state: 'CA'},
@@ -9,6 +9,7 @@ var users = [
     ],
     keywords: 'healthcare administration',
     sortPref: 'skills',
+    relocate: true,
     resume: '/js/resume.txt'
   },
   {
@@ -21,6 +22,21 @@ var users = [
     ],
     keywords: 'web developer',
     sortPref: 'commute',
+    relocate: false,
+    resume: '/js/resume.txt'
+
+  },
+  {
+    name: 'Gabe S.',
+    loc: 'Redlands, CA',
+    searchAreas: [
+      {city: 'Pasadena', state: 'CA' },
+      {city: 'Atlanta', state: 'GA'},
+      {city: 'Dallas', state: 'TX'},
+    ],
+    keywords: 'nodejs',
+    sortPref: 'rpp',
+    relocate: true,
     resume: '/js/resume.txt'
 
   }

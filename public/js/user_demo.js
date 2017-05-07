@@ -14,8 +14,14 @@ var demo = {
   _searchForUserPostings : function(user){
     console.log(user);
     user.searchAreas.forEach(function(area){
+      var startLoc = ''
+      if (user.relocate){
+        startLoc = area.city + ', ' + area.state;
+      } else {
+        startLoc = user.loc;
+      }
       Request.Post("/api/search", {
-        'loc': user.loc,
+        'loc': startLoc,
         'city': area.city,
         'state': area.state,
         'keywords': user.keywords

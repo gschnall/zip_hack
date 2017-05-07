@@ -30,6 +30,7 @@ var user_list = {
     var $currentLocation = $("<h4>", {"text": user.loc, "class": "posting-date"});
     var $keywords = $("<h4>", {"text": user.keywords, "class": "card-title"});
     var $sortPref = $("<p>", {"text": user.sortPref, "class": "card-text"});
+    var $relocate = $("<p>", {"text": 'Relocate: ' + user.relocate, "class": "card-text"});
     var searchAreas = [];
     user.searchAreas.forEach(function(area){
       searchAreas.push($("<p>", {"text": area.city + ", " +area.state, "class": "card-text"}))
@@ -40,6 +41,7 @@ var user_list = {
       $cb.append($currentLocation)
       $cb.append($keywords)
       $cb.append($sortPref)
+      $cb.append($relocate)
     searchAreas.forEach(function(area){
       $cb.append(area);
     })
