@@ -15,7 +15,24 @@ function getGeocode(address, callback) {
       } else {
         if (res.json.results[0])
         {
+          var county = "";
           var latLon = res.json.results[0].geometry.location;
+          res.json.results[0].address_components.forEach(function(component){
+            //console.log(component.long_name);
+            var splitName = component.long_name.split(" ");
+            splitName.forEach(function(part){
+              if (part === 'County')
+              {
+              splitName.pop();
+              county = splitName.join(' ');
+              }
+            });
+            if (component.types[0] === 'administrative_area_level_1')
+            {
+              county += ", " + component.short_name;
+            }
+            latLon.county = county;
+          });
         } else{
           var latLon = {lat: '', lng: ''};
         }
