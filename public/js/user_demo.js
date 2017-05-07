@@ -12,7 +12,6 @@ var demo = {
     this._searchForUserPostings(users[(params.id || 0)]);
   },
   _searchForUserPostings : function(user){
-    console.log(user);
     user.searchAreas.forEach(function(area){
       var startLoc = ''
       if (user.relocate){

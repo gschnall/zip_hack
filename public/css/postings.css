@@ -41,3 +41,9 @@
   bottom: 36px;
   position: relative;
 }
+.skills-number {
+  float: right;
+  left: 80px;
+  font-size: 31px;
+  position: relative;
+}
