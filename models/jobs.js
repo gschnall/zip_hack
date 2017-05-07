@@ -4,19 +4,19 @@ var request = require('request');
 var $ = require('cheerio');
 
 
-function findJobs(city, state, keywords, length)
+function findJobs(city, state, keywords, length, radius, sort)
 {
   return new Promise(function(resolve, reject) {
     // do a job search
     api.JobSearch()
-    	.Radius(25)
+    	.Radius(radius)
     	.WhereLocation({
     		city : city,
     		state : state
     	})
     	.WhereKeywords(keywords)
       .Limit(length)
-    	.SortBy("relevance")
+    	.SortBy(sort)
     	.UserIP("1.2.3.4")
     	.UserAgent("Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36")
     	.Search(
