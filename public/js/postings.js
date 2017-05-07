@@ -91,6 +91,7 @@ var post = {
     $skill.click({"param1":post.skills.toString()}, this._skillAlert);
 
     var $apply = $("<a>", {"text": "Apply", "class": "btn btn-primary apply-btn"});
+    $apply.click({"param1": "thing"}, this._transformToCheck);
 
     $row.append($cb)
       $cb.append($title)
