@@ -1,59 +1,105 @@
+//persKey: AIzaSyBl9dkTrB28BcxG4ArsEdA_1yx7ZrquqIQ
+//zcKey: 'AIzaSyDpHsG1eJG_aFi9BB7Q-dLLgdS23840weo'
+
 var googleMapsClient = require('@google/maps').createClient({
-  key: 'AIzaSyDpHsG1eJG_aFi9BB7Q-dLLgdS23840weo'
+  key: 'AIzaSyBl9dkTrB28BcxG4ArsEdA_1yx7ZrquqIQ'
 });
 
 
 function getGeocode(address, callback) {
-  var latLon = {};
+    googleMapsClient.geocode({
+      address: address
+    }, function(err,res){
+      if (err){
+        callback(err);
+      } else {
+        if (res.json.results[0])
+        {
+          var latLon = res.json.results[0].geometry.location;
+        } else{
+          var latLon = {lat: '', lng: ''};
+        }
 
-  googleMapsClient.geocode({
-    address: address
-  }, function(err,res){
-    if (err){
-      console.log("GC ERR: " + err);
-    } else {
-      var latLon = res.json.results[0].geometry.location;
-      callback(latLon);
-    }
-  });
+        callback(err, latLon);
+      }
+    });
 }
 
-function getCommuteTime(startAddr, endAddr, callback)
+
+function getCommuteTimes(jobsArray)
 {
-  var transitModes = ['driving', 'bicycling', 'transit', 'walking'];
-  var startLatlon, endLatlon;
-  var results = {};
-  getGeocode(startAddr, function(res){
-    startLatlon = res;
-    getGeocode(endAddr, function(res){
-      endLatlon = res;
-      transitModes.forEach(function(mode){
-        googleMapsClient.directions({
-            origin: startLatlon,
-            destination: endLatlon,
+  return new Promise(function(resolve, reject) {
+    var transitModes = ['driving', 'bicycling', 'transit', 'walking'];
+    var jobsProcessed = 0;
+    jobsArray.forEach(function(job, index, array){
+      if (job.transit.endLatlon.lng === '')
+      {
+        jobsProcessed++;
+      } else {
+        transitModes.forEach(function(mode){
+          googleMapsClient.directions({
+            origin: job.transit.startLatlon,
+            destination: job.transit.endLatlon,
             mode: mode
           }, function(err, res){
-            if (err) {
-              console.log('DIR ERR: ' + err);
+            if (err)
+            {
+              console.log("Dir ERR: " + err);
+              jobsProcessed++;
             } else {
-              results[mode] = res.json.routes[0].legs[0].duration;
-              if (Object.keys(results).length === 4)
+              job.transit[mode] = {};
+              job.transit[mode].duration = res.json.routes[0].legs[0].duration;
+              job.transit[mode].distance = res.json.routes[0].legs[0].distance;
+              if (Object.keys(job.transit).length === 6)
               {
-                callback(results);
+                jobsProcessed++;
+                console.log(jobsProcessed);
               }
             }
+            if (jobsProcessed === array.length)
+            {
+              resolve(jobsArray);
+            }
           });
-      });
+        });
 
-
-
-
-
+      }
     });
   });
 
 }
 
-getCommuteTime('USC', '2268 28th st., santa monica, ca 90401', function(results){
-  console.log(results);
-});
+function getLatlon(startLocation, jobsArray)
+{
+  return new Promise(function(resolve, reject) {
+    getGeocode(startLocation, function(err, data){
+      console.log(err);
+      var startLatlon = data;
+
+      var jobsProcessed = 0;
+      jobsArray.forEach((job, index, array)=>{
+        job.transit = {};
+        job.transit.startLatlon = startLatlon;
+        var searchString = job.company + ", " + job.formattedLocationFull;
+        getGeocode(searchString, function(err, data){
+          if (err){
+            console.log("JP : " + err);
+          } else {
+            jobsProcessed++;
+            job.transit.endLatlon = data;
+          }
+
+          if (jobsProcessed == array.length)
+          {
+            resolve(jobsArray);
+          }
+        })
+      });
+    })
+  });
+}
+
+module.exports = {
+  getLatlon: getLatlon,
+  getCommuteTimes: getCommuteTimes
+}
