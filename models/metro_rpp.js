@@ -22,9 +22,28 @@ function getRpps(jobsArray)
   return new Promise(function(resolve, reject) {
     var jobsProcessed = 0;
     jobsArray.forEach((job, index, array) => {
+      job.rpp = {};
+      if (job.transit.startLatlon.county)
+      {
+        job.rpp.start = {};
+        var msa;
+        county_MSA_array.forEach(function(county){
+          if (county.indexOf(job.transit.startLatlon.county) !== -1)
+          {
+            msa_rpp_array.forEach(function(msa){
+              if (msa.indexOf(county[0]) !== -1)
+              {
+                job.rpp.start[msa[3]] = msa[4];
+              }
+            })
+          }
+        })
+      }
+
+
       if (job.transit.endLatlon.county)
       {
-        job.rpp = {};
+        job.rpp.dest = {};
         var msa;
         county_MSA_array.forEach(function(county){
           if (county.indexOf(job.transit.endLatlon.county) !== -1)
@@ -32,7 +51,7 @@ function getRpps(jobsArray)
             msa_rpp_array.forEach(function(msa){
               if (msa.indexOf(county[0]) !== -1)
               {
-                job.rpp[msa[3]] = msa[4];
+                job.rpp.dest[msa[3]] = msa[4];
               }
             })
           }

@@ -21,9 +21,9 @@ var post = {
 
   _searchForPostings: function (e) {
     e.preventDefault();
-    this._showLoader(true);
-    this._postContainer.empty();
-    var content = [this._searchInp.val()];
+
+    var content = this._searchInp.val();
+
     Request.Post("/api/search", {"keywords": content})
      .then(function (postings){
        this._showLoader(false);
@@ -99,4 +99,3 @@ $(document).ready(function() {
 function getDefaultResume() {
   return Request.Get("/js/resume.txt");
 }
-
