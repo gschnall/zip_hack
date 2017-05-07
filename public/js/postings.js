@@ -7,6 +7,8 @@ var post = {
   _searchBtn: $("#search-btn"),
   _searchInp: $("#search-input"),
   _postContainer: $("#posting-container"),
+  _postLoader: $("#posting-loader"),
+
   // ***----------***
 
   // <<< EVENTS >>>
@@ -19,9 +21,12 @@ var post = {
 
   _searchForPostings: function (e) {
     e.preventDefault();
+
     var content = this._searchInp.val();
+
     Request.Post("/api/search", {"keywords": content})
      .then(function (postings){
+       this._showLoader(false);
        this._generatePostingRows(postings);
      }.bind(this))
   },
@@ -32,6 +37,11 @@ var post = {
         this._createPostingRow(post, ind);
       }, this);
     }.bind(this));
+  },
+
+  _showLoader: function (show) {
+    if (show) { return this._postLoader.removeClass("hide") } 
+    return this._postLoader.addClass("hide")
   },
 
   _createPostingRow: function (post, n) {
@@ -63,6 +73,10 @@ var post = {
       $cb.append($apply)
 
     this._postContainer.append($row);
+  },
+
+  _getSampleSkills: function () {
+    return ["JavaScript", "Node.js", "HTML", "CSS"]; 
   },
 
   _generateSkillsResult: function(postText, resumeText, ind) {
